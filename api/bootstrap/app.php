@@ -20,6 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
         EnsureFrontendRequestsAreStateful::class,
         HandleCors::class,
     ]);
+
+        $middleware->validateCsrfTokens(except: [
+        'api/auth/login',
+        'api/auth/logout',
+    ]);
+
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
