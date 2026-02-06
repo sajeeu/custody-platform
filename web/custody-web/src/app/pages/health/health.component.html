@@ -1,0 +1,40 @@
+<mat-card style="max-width: 680px; margin: 32px auto; padding: 16px;">
+  <h2 style="margin-top: 0;">API Health Check</h2>
+
+  <div *ngIf="loading" style="display:flex; align-items:center; gap:12px;">
+    <mat-spinner diameter="24"></mat-spinner>
+    <span>Calling Laravel API...</span>
+  </div>
+
+  <div *ngIf="!loading && data">
+    <p><strong>Success:</strong> {{ data.success }}</p>
+    <p><strong>Message:</strong> {{ data.message }}</p>
+  </div>
+
+  <div *ngIf="!loading && error" style="color:#b00020;">
+    <p><strong>Error:</strong> {{ error }}</p>
+    <p style="margin: 0;">
+      If this is a CORS error, we will fix it in the next step.
+    </p>
+  </div>
+</mat-card>
+<mat-card style="max-width: 680px; margin: 32px auto; padding: 16px;">
+  <h2 style="margin-top: 0;">API Health Check</h2>
+
+  <div *ngIf="loading" style="display:flex; align-items:center; gap:12px;">
+    <mat-spinner diameter="24"></mat-spinner>
+    <span>Calling Laravel API...</span>
+  </div>
+
+  <div *ngIf="!loading && data">
+    <p><strong>Success:</strong> {{ data.success }}</p>
+    <p><strong>Message:</strong> {{ data.message }}</p>
+  </div>
+
+  <div *ngIf="!loading && error" style="color:#b00020;">
+    <p><strong>Error:</strong> {{ error }}</p>
+    <p style="margin: 0;">
+      If this is a CORS error, we will fix it in the next step.
+    </p>
+  </div>
+</mat-card>
