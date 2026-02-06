@@ -5,6 +5,8 @@ import { ApiService, HealthResponse } from '../../services/api.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { finalize } from 'rxjs/operators';
+
 @Component({
   selector: 'app-health',
   standalone: true,
@@ -19,20 +21,22 @@ export class HealthComponent implements OnInit {
 
   constructor(private api: ApiService) {}
 
-  ngOnInit(): void {
-    this.api.health().subscribe({
+ngOnInit(): void {
+  this.api
+    .health()
+    .pipe(finalize(() => (this.loading = false)))
+    .subscribe({
       next: (res) => {
+        console.log('Health response:', res);
         this.data = res;
-        this.loading = false;
       },
       error: (err) => {
-        // Helpful message even for CORS
+        console.error('Health error:', err);
         this.error =
           err?.error?.message ??
           err?.message ??
           'Failed to call API (check browser console)';
-        this.loading = false;
       },
     });
-  }
+}
 }

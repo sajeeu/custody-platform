@@ -15,7 +15,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  health(): Observable<HealthResponse> {
-    return this.http.get<HealthResponse>(`${this.baseUrl}/api/health`);
-  }
+ health(): Observable<HealthResponse> {
+  return this.http.get<HealthResponse>(`${this.baseUrl}/api/health`, {
+    withCredentials: true,
+  });
+}
 }
