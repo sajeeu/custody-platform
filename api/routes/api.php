@@ -31,10 +31,17 @@ Route::middleware('web')->group(function () {
 
     // ✅ Admin ledger post (authenticated + role check inside controller)
     Route::post('/admin/ledger/post', [AdminLedgerPostController::class, 'post'])->middleware('auth');
+});
 
     // ✅ Withdrawals (session-enabled + authenticated)
     Route::middleware('web')->group(function () {
     Route::post('/withdrawals/request', [WithdrawalController::class, 'request'])->middleware('auth');
     Route::post('/withdrawals/{withdrawal}/approve', [WithdrawalController::class, 'approve'])->middleware('auth');
 });
+
+    // ✅ Withdrawals read/admin endpoints (session-enabled + authenticated)
+    Route::middleware('web')->group(function () {
+    Route::get('/withdrawals/me', [WithdrawalController::class, 'myWithdrawals'])->middleware('auth');
+    Route::get('/admin/withdrawals', [WithdrawalController::class, 'adminQueue'])->middleware('auth');
+    Route::post('/withdrawals/{withdrawal}/reject', [WithdrawalController::class, 'reject'])->middleware('auth');
 });

@@ -48,4 +48,55 @@ class WithdrawalController extends Controller
             'data' => $updated,
         ]);
     }
+
+
+    public function myWithdrawals(Request $request)
+    {
+        $account = $request->user()->account;
+
+        $withdrawals = Withdrawal::where('account_id', $account->id)
+            ->with('metal')
+            ->orderByDesc('id')
+            ->limit(200)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $withdrawals,
+        ]);
+    }
+
+    public function adminQueue(Request $request)
+    {
+        $this->authorize('viewAny', Withdrawal::class);
+
+        $status = $request->query('status', 'PENDING');
+
+        $withdrawals = Withdrawal::with(['metal', 'account'])
+            ->when($status, fn ($q) => $q->where('status', $status))
+            ->orderBy('created_at')
+            ->limit(200)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $withdrawals,
+        ]);
+    }
+
+    public function reject(Request $request, Withdrawal $withdrawal, WithdrawalService $service)
+    {
+        $this->authorize('reject', $withdrawal);
+
+        $data = $request->validate([
+            'reason' => ['required', 'string', 'min:5'],
+        ]);
+
+        $updated = $service->reject($withdrawal, $request->user()->id, $data['reason']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $updated,
+        ]);
+}
 }

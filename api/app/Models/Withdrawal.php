@@ -25,4 +25,15 @@ class Withdrawal extends Model
         'approved_at' => 'datetime',
         'completed_at' => 'datetime',
     ];
+
+    public function metal()
+    {
+        return $this->belongsTo(\App\Models\Metal::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(\App\Models\Account::class);
+    }
+
 }

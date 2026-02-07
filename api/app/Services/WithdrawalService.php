@@ -11,6 +11,7 @@ use App\Models\Withdrawal;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
+
 class WithdrawalService
 {
     public function requestUnallocated(Account $account, Metal $metal, string $quantityKg, int $requestedByUserId): Withdrawal
@@ -73,4 +74,22 @@ class WithdrawalService
         // Simple deterministic format; replace with sequence later if required
         return 'WD-' . now()->format('Ymd-His') . '-' . random_int(100000, 999999);
     }
+
+
+    public function reject(Withdrawal $withdrawal, int $rejectedByUserId, string $reason): Withdrawal
+{
+    if ($withdrawal->status !== WithdrawalStatus::PENDING) {
+        throw new InvalidArgumentException('Only PENDING withdrawals can be rejected.');
+    }
+
+    return DB::transaction(function () use ($withdrawal, $rejectedByUserId, $reason) {
+        $withdrawal->status = WithdrawalStatus::REJECTED;
+        $withdrawal->rejected_by_user_id = $rejectedByUserId;
+        $withdrawal->rejected_at = now();
+        $withdrawal->rejection_reason = $reason;
+        $withdrawal->save();
+
+        return $withdrawal;
+    });
+}
 }

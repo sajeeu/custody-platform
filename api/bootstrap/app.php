@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'api/admin/ledger/post',
         'api/withdrawals/request',
         'api/withdrawals/*/approve',
+        'api/withdrawals/*/reject',
     ]);
 
 
