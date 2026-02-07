@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Account::class => \App\Policies\AccountPolicy::class,
         \App\Models\Withdrawal::class => \App\Policies\WithdrawalPolicy::class,
         \App\Models\Deposit::class => \App\Policies\DepositPolicy::class,
+        \App\Models\Bar::class => \App\Policies\BarPolicy::class,
     ];
 
 }

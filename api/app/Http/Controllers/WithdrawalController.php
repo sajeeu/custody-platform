@@ -35,19 +35,24 @@ class WithdrawalController extends Controller
     }
 
     // Admin approves & completes (posts ledger debit)
-    public function approve(Request $request, Withdrawal $withdrawal, WithdrawalService $service, LedgerPostingService $ledger)
-    {
-        if ($request->user()->role !== 'ADMIN') {
-            abort(403, 'Forbidden');
-        }
-
-        $updated = $service->approveAndComplete($withdrawal, $request->user()->id, $ledger);
-
-        return response()->json([
-            'success' => true,
-            'data' => $updated,
-        ]);
+    public function approve(Request $request, \App\Models\Withdrawal $withdrawal, \App\Services\WithdrawalService $service, \App\Services\LedgerPostingService $ledger)
+{
+    if ($request->user()->role !== 'ADMIN') {
+        abort(403, 'Forbidden');
     }
+
+    if ($withdrawal->storage_type === \App\Enums\StorageType::ALLOCATED) {
+        $updated = $service->approveAllocatedByBars($withdrawal, $request->user()->id, $ledger);
+    } else {
+        $updated = $service->approveAndComplete($withdrawal, $request->user()->id, $ledger);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $updated,
+    ]);
+}
+
 
 
     public function myWithdrawals(Request $request)
@@ -99,4 +104,29 @@ class WithdrawalController extends Controller
             'data' => $updated,
         ]);
 }
+
+public function requestAllocated(Request $request, \App\Services\WithdrawalService $service)
+{
+    $data = $request->validate([
+        'metal_code' => ['required', 'string'],
+        'bar_ids' => ['required', 'array', 'min:1'],
+        'bar_ids.*' => ['integer'],
+    ]);
+
+    $metal = \App\Models\Metal::where('code', $data['metal_code'])->firstOrFail();
+    $account = $request->user()->account;
+
+    $withdrawal = $service->requestAllocatedByBars(
+        $account,
+        $metal,
+        $data['bar_ids'],
+        $request->user()->id
+    );
+
+    return response()->json([
+        'success' => true,
+        'data' => $withdrawal,
+    ]);
+}
+
 }

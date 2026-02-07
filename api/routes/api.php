@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminLedgerPostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\BarController;
+use App\Http\Controllers\AllocatedDepositController;
 
 Route::get('/health', function () {
     return response()->json(['success' => true, 'message' => 'API is running']);
@@ -37,6 +39,17 @@ Route::middleware('web')->group(function () {
     Route::post('/admin/deposits', [DepositController::class, 'create'])->middleware('auth');
     Route::get('/deposits/me', [DepositController::class, 'myDeposits'])->middleware('auth');
     Route::get('/admin/deposits', [DepositController::class, 'adminList'])->middleware('auth');
+
+    // Bars
+    Route::get('/bars/me', [BarController::class, 'myBars'])->middleware('auth');
+    Route::get('/bars/me/available', [BarController::class, 'myAvailableBars'])->middleware('auth');
+    Route::get('/admin/bars', [BarController::class, 'adminList'])->middleware('auth');
+
+    // Allocated deposit (admin registers bars)
+    Route::post('/admin/allocated-deposits', [AllocatedDepositController::class, 'create'])->middleware('auth');
+
+    // Allocated withdrawal request
+    Route::post('/withdrawals/request-allocated', [WithdrawalController::class, 'requestAllocated'])->middleware('auth');
 });
 
     // ✅ Withdrawals (session-enabled + authenticated)
