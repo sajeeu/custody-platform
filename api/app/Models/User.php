@@ -46,4 +46,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function account()
+    {
+        return $this->hasOne(\App\Models\Account::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->account()->create([
+                'type' => $user->role === 'INSTITUTIONAL'
+                    ? 'INSTITUTIONAL'
+                    : 'RETAIL',
+                'status' => 'ACTIVE',
+            ]);
+        });
+    }
+
 }
