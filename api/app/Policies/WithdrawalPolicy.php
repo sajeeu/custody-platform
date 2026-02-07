@@ -25,7 +25,8 @@ class WithdrawalPolicy
 
     public function reject(User $user, Withdrawal $withdrawal): bool
     {
-        // Only admin can reject, only if PENDING
-        return $user->role === 'ADMIN' && $withdrawal->status === 'PENDING';
+        return $user->role === 'ADMIN'
+            && in_array($withdrawal->status, ['PENDING', 'REJECTED'], true);
     }
+
 }

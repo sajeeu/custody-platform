@@ -16,11 +16,14 @@ class Bar extends Model
         'created_by_user_id',
         'withdrawn_at',
         'meta',
+        'reserved_by_withdrawal_id',
+        'reserved_at',
     ];
 
     protected $casts = [
         'meta' => 'array',
         'withdrawn_at' => 'datetime',
+        'reserved_at' => 'datetime',
     ];
 
     public function metal()

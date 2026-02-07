@@ -129,4 +129,49 @@ public function requestAllocated(Request $request, \App\Services\WithdrawalServi
     ]);
 }
 
+public function adminAllocatedQueue(Request $request)
+{
+    $this->authorize('viewAny', \App\Models\Withdrawal::class);
+
+    $status = $request->query('status', \App\Enums\WithdrawalStatus::PENDING);
+
+    $withdrawals = \App\Models\Withdrawal::where('storage_type', \App\Enums\StorageType::ALLOCATED)
+        ->where('status', $status)
+        ->with('metal')
+        ->orderBy('created_at')
+        ->limit(200)
+        ->get();
+
+    // Attach bars to each withdrawal (by meta bar_ids)
+    $withdrawals->transform(function ($w) {
+        $barIds = $w->meta['bar_ids'] ?? [];
+        $w->setAttribute('bars', \App\Models\Bar::whereIn('id', is_array($barIds) ? $barIds : [])
+            ->with('metal')
+            ->get());
+        return $w;
+    });
+
+    return response()->json([
+        'success' => true,
+        'data' => $withdrawals,
+    ]);
+}
+
+
+public function adminReleaseBars(Request $request, \App\Models\Withdrawal $withdrawal, \App\Services\WithdrawalService $service)
+{
+    if ($request->user()->role !== 'ADMIN') {
+        abort(403, 'Forbidden');
+    }
+
+    // You can reuse reject() with a standardized reason:
+    $updated = $service->reject($withdrawal, $request->user()->id, 'Released reserved bars by admin (manual recovery).');
+
+    return response()->json([
+        'success' => true,
+        'data' => $updated,
+    ]);
+}
+
+
 }

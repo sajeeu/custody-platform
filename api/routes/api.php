@@ -50,6 +50,13 @@ Route::middleware('web')->group(function () {
 
     // Allocated withdrawal request
     Route::post('/withdrawals/request-allocated', [WithdrawalController::class, 'requestAllocated'])->middleware('auth');
+
+    // Admin approves allocated withdrawal (select bars)
+    Route::get('/admin/withdrawals/allocated', [WithdrawalController::class, 'adminAllocatedQueue'])->middleware('auth');
+
+    // ✅ Admin releases allocated bars (authenticated + role check inside controller)
+    Route::post('/admin/withdrawals/{withdrawal}/release-bars', [WithdrawalController::class, 'adminReleaseBars'])->middleware('auth');
+
 });
 
     // ✅ Withdrawals (session-enabled + authenticated)
