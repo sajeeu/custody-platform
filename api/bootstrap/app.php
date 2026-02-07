@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'api/withdrawals/request',
         'api/withdrawals/*/approve',
         'api/withdrawals/*/reject',
+        'api/admin/deposits',
     ]);
 
 
