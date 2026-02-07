@@ -1,31 +1,33 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\AdminLedgerPostController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function () {
     return response()->json(['success' => true, 'message' => 'API is running']);
 });
 
-Route::middleware(['web', 'auth'])->group(function () {
+// Session-enabled routes (cookie/session works) BUT not necessarily authenticated
+Route::middleware('web')->group(function () {
+    // ✅ Public: login (must NOT be behind 'auth')
     Route::post('/auth/login', [AuthController::class, 'login']);
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-    Route::get('/account/me', [AccountController::class, 'myAccount']);
-    Route::get('/accounts', [AccountController::class, 'index']);
-    Route::get('/accounts/{account}', [AccountController::class, 'show']);
+
+    // ✅ Authenticated session routes
+    Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth');
+    Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth');
+
+    // ✅ Accounts (authenticated)
+    Route::get('/account/me', [AccountController::class, 'myAccount'])->middleware('auth');
+    Route::get('/accounts', [AccountController::class, 'index'])->middleware('auth');
+    Route::get('/accounts/{account}', [AccountController::class, 'show'])->middleware('auth');
+
+    // ✅ Ledger read endpoints (authenticated)
+    Route::get('/ledger/me', [LedgerController::class, 'myLedger'])->middleware('auth');
+    Route::get('/balances/me', [LedgerController::class, 'myBalances'])->middleware('auth');
+
+    // ✅ Admin ledger post (authenticated + role check inside controller)
+    Route::post('/admin/ledger/post', [AdminLedgerPostController::class, 'post'])->middleware('auth');
 });
-
-
-
-// Route::middleware('web')->group(function () {
-//     Route::post('/auth/login', [AuthController::class, 'login']);
-//     Route::post('/auth/logout', [AuthController::class, 'logout']);
-//     Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth');
-// });
-
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::get('/account/me', [AccountController::class, 'myAccount']);
-//     Route::get('/accounts', [AccountController::class, 'index']);
-//     Route::get('/accounts/{account}', [AccountController::class, 'show']);
-// });

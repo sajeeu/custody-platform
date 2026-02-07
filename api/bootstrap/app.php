@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
         'api/auth/login',
         'api/auth/logout',
+        'api/admin/ledger/post',
     ]);
 
 
