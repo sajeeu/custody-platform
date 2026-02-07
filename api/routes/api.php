@@ -5,6 +5,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\AdminLedgerPostController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WithdrawalController;
 
 Route::get('/health', function () {
     return response()->json(['success' => true, 'message' => 'API is running']);
@@ -30,4 +31,10 @@ Route::middleware('web')->group(function () {
 
     // ✅ Admin ledger post (authenticated + role check inside controller)
     Route::post('/admin/ledger/post', [AdminLedgerPostController::class, 'post'])->middleware('auth');
+
+    // ✅ Withdrawals (session-enabled + authenticated)
+    Route::middleware('web')->group(function () {
+    Route::post('/withdrawals/request', [WithdrawalController::class, 'request'])->middleware('auth');
+    Route::post('/withdrawals/{withdrawal}/approve', [WithdrawalController::class, 'approve'])->middleware('auth');
+});
 });

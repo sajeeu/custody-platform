@@ -25,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
         'api/auth/login',
         'api/auth/logout',
         'api/admin/ledger/post',
+        'api/withdrawals/request',
+        'api/withdrawals/*/approve',
     ]);
 
 
