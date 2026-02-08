@@ -11,30 +11,42 @@ import { ApiService } from '../../core/api.service';
 export class MyDeposits implements OnInit {
   deposits: any[] = [];
   error: string | null = null;
+  message: string | null = null;
+  loading = false;
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    // First attempt (may race on hard refresh)
+    // First attempt
     this.load();
 
     // Fallback attempt after session is definitely ready
     setTimeout(() => {
-      if (!this.deposits.length) {
+      if (!this.error && !this.deposits.length && !this.loading) {
         this.load();
       }
     }, 800);
   }
 
-  load() {
+  refresh() {
+    this.load(true);
+  }
+
+  load(showMessage = false) {
+    this.loading = true;
+    this.error = null;
+    if (showMessage) this.message = null;
+
     this.api.get<any>('/deposits/me').subscribe({
       next: (res) => {
         this.deposits = Array.isArray(res?.data) ? res.data : [];
+        this.loading = false;
+        if (showMessage) this.message = 'Updated.';
       },
       error: (err) => {
         this.error = err?.error?.message ?? 'Failed to load deposits.';
+        this.loading = false;
       },
     });
   }
 }
-

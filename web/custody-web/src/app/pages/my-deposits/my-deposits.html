@@ -4,21 +4,36 @@
       <h2>My Deposits</h2>
       <p class="sub">Track your deposit requests and their status.</p>
     </div>
+
+    <div class="headerActions">
+      <a class="linkPill" href="/institutional/bars">Allocated Bars</a>
+      <a class="linkPill" href="/institutional/withdrawals">Withdrawals</a>
+
+      <!-- <button class="btn" (click)="refresh()" [disabled]="loading">
+        {{ loading ? 'Refreshing…' : 'Refresh' }}
+      </button> -->
+    </div>
   </div>
 
   <div class="card">
 
+    <!-- <div *ngIf="loading" class="muted">Loading…</div>
+
     <div *ngIf="error" class="alert">
       {{ error }}
-    </div>
+    </div> -->
 
-    <!-- <div *ngIf="!error && !deposits.length" class="empty">
+    <!-- <div *ngIf="message && !error" class="success">
+      {{ message }}
+    </div> -->
+
+    <div *ngIf="!loading && !error && !deposits.length" class="empty">
       <div class="emptyIcon">📥</div>
       <div>
         <div class="emptyTitle">No deposits yet</div>
         <div class="emptySub">Create your first deposit to see it listed here.</div>
       </div>
-    </div> -->
+    </div>
 
     <div class="tableWrap">
       <table class="table">
@@ -37,7 +52,16 @@
             <td class="mono">{{ d.id }}</td>
             <td>{{ d.metal?.code }}</td>
             <td class="num mono">{{ d.quantity_kg }}</td>
-            <td>{{ d.status }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.pending]="d.status === 'PENDING'"
+                [class.approved]="d.status === 'APPROVED'"
+                [class.rejected]="d.status === 'REJECTED'"
+              >
+                {{ d.status }}
+              </span>
+            </td>
             <td class="mono">{{ d.reference }}</td>
             <td class="mono">{{ d.created_at | date:'short' }}</td>
           </tr>
@@ -45,5 +69,9 @@
       </table>
     </div>
 
+  </div>
+
+    <div style="margin-top:14px; display:flex; gap:10px;">
+    <button style="padding:10px 14px" (click)="refresh()">Refresh</button>
   </div>
 </div>
