@@ -1,88 +1,125 @@
-<div style="max-width:1100px; margin:24px auto; font-family:system-ui;">
-  <h2>Institutional — Allocated Bars</h2>
+<div class="institutionalBarsPage">
+  <div class="content">
 
-  <p *ngIf="loading" style="color:#666;">Loading…</p>
-  <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
+    <!-- Header (centered) -->
+    <div class="pageHeader">
+      <h2>Allocated Bars</h2>
+      <p>View your allocated physical holdings.</p>
 
-  <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
-    <div style="flex:1; border:1px solid #ddd; padding:14px; border-radius:10px;">
-      <h3>Available Bars (select for withdrawal)</h3>
-
-      <table style="width:100%; border-collapse:collapse;">
-        <thead>
-          <tr style="text-align:left; border-bottom:1px solid #eee;">
-            <th></th>
-            <th>Serial</th>
-            <th>Metal</th>
-            <th>Weight (kg)</th>
-            <th>Vault</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let b of available" style="border-bottom:1px solid #f2f2f2;">
-            <td>
-              <input type="checkbox" [checked]="isSelected(b.id)" (change)="toggle(b.id)" />
-            </td>
-            <td>{{ b.serial }}</td>
-            <td>{{ b.metal?.code ?? '-' }}</td>
-            <td>{{ b.weight_kg }}</td>
-            <td>{{ b.vault ?? '-' }}</td>
-          </tr>
-
-          <tr *ngIf="available.length === 0">
-            <td colspan="5" style="padding:12px; color:#666;">No available bars.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style="margin-top:12px; padding-top:12px; border-top:1px solid #eee;">
-        <div><b>Selected:</b> {{ selected.size }}</div>
-        <div><b>Total selected (kg):</b> {{ selectedTotalKg() }}</div>
-
-        <button
-          style="margin-top:10px; padding:10px 14px"
-          (click)="submitAllocatedWithdrawal()"
-          [disabled]="submitting || selected.size === 0"
-        >
-          {{ submitting ? 'Submitting…' : 'Request Allocated Withdrawal' }}
-        </button>
-
-        <p *ngIf="submitError" style="color:#b00020; margin-top:10px;">{{ submitError }}</p>
-        <p *ngIf="submitSuccess" style="color:#0b6b0b; margin-top:10px;">{{ submitSuccess }}</p>
+      <div class="pageLinks">
+        <a href="/institutional/withdrawals">Go to Withdrawals</a>
+        <a href="/my-deposits">Go to Deposits</a>
+        <a href="/institutional-bars">Refresh</a>
       </div>
     </div>
 
-    <div style="flex:1; border:1px solid #ddd; padding:14px; border-radius:10px;">
-      <h3>All Bars (status view)</h3>
+    <!-- Status messages -->
+    <!-- <p *ngIf="loading" class="muted">Loading…</p>
+    <p *ngIf="error" class="errorText">{{ error }}</p> -->
 
-      <table style="width:100%; border-collapse:collapse;">
-        <thead>
-          <tr style="text-align:left; border-bottom:1px solid #eee;">
-            <th>Serial</th>
-            <th>Status</th>
-            <th>Weight (kg)</th>
-            <th>Reserved By</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let b of all" style="border-bottom:1px solid #f2f2f2;">
-            <td>{{ b.serial }}</td>
-            <td>{{ b.status }}</td>
-            <td>{{ b.weight_kg }}</td>
-            <td>{{ b.reserved_by_withdrawal_id ?? '-' }}</td>
-          </tr>
+    <!-- Two-column layout -->
+    <div class="grid">
+      <!-- Left: Available -->
+      <div class="panel">
+        <h3>Available Bars (select for withdrawal)</h3>
 
-          <tr *ngIf="all.length === 0">
-            <td colspan="4" style="padding:12px; color:#666;">No bars found.</td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="tableCard">
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:44px;"></th>
+                  <th>Serial</th>
+                  <th>Metal</th>
+                  <th class="num">Weight (kg)</th>
+                  <th>Vault</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of available">
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="isSelected(b.id)"
+                      (change)="toggle(b.id)"
+                    />
+                  </td>
+                  <td class="mono">{{ b.serial }}</td>
+                  <td>{{ b.metal?.code ?? '-' }}</td>
+                  <td class="num mono">{{ b.weight_kg }}</td>
+                  <td>{{ b.vault ?? '-' }}</td>
+                </tr>
 
-      <button style="margin-top:12px; padding:10px 14px" (click)="refresh()">Refresh</button>
+                <tr *ngIf="available.length === 0">
+                  <td colspan="5" class="emptyRow">No available bars.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div><b>Selected:</b> {{ selected.size }}</div>
+          <div><b>Total selected (kg):</b> {{ selectedTotalKg() }}</div>
+
+          <button
+            class="btn primary"
+            (click)="submitAllocatedWithdrawal()"
+            [disabled]="submitting || selected.size === 0"
+          >
+            {{ submitting ? 'Submitting…' : 'Request Allocated Withdrawal' }}
+          </button>
+
+          <p *ngIf="submitError" class="errorText" style="margin-top:10px;">
+            {{ submitError }}
+          </p>
+          <p *ngIf="submitSuccess" class="successText" style="margin-top:10px;">
+            {{ submitSuccess }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: All -->
+      <div class="panel">
+        <h3>All Bars (status view)</h3>
+
+        <div class="tableCard">
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Serial</th>
+                  <th>Status</th>
+                  <th class="num">Weight (kg)</th>
+                  <th class="num">Reserved By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of all">
+                  <td class="mono">{{ b.serial }}</td>
+                  <td>{{ b.status }}</td>
+                  <td class="num mono">{{ b.weight_kg }}</td>
+                  <td class="num mono">{{ b.reserved_by_withdrawal_id ?? '-' }}</td>
+                </tr>
+
+                <tr *ngIf="all.length === 0">
+                  <td colspan="4" class="emptyRow">No bars found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <button class="btn" style="margin-top:12px;" (click)="refresh()">
+          Refresh
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div style="margin-top:16px;">
-    <a href="/institutional/withdrawals">Go to Withdrawals</a>
+    <div style="margin-top:16px; text-align:center;">
+      <a href="/institutional/withdrawals">Go to Withdrawals</a>
+    </div>
+
   </div>
 </div>
+
