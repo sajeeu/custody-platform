@@ -26,21 +26,22 @@
         <td>{{ w.status }}</td>
 
         <td>
-          <button
-            style="padding:8px 10px; margin-right:8px"
-            (click)="approve(w)"
-            [disabled]="actingId === w.id"
-          >
-            {{ actingId === w.id ? 'Working…' : 'Approve' }}
-          </button>
+      <button
+        style="padding:8px 10px; margin-right:8px"
+        (click)="approve(w)"
+        [disabled]="actingId === w.id || w.status !== 'PENDING'"
+      >
+        {{ actingId === w.id ? 'Working…' : 'Approve' }}
+      </button>
 
-          <button
-            style="padding:8px 10px"
-            (click)="reject(w)"
-            [disabled]="actingId === w.id"
-          >
-            {{ actingId === w.id ? 'Working…' : 'Reject' }}
-          </button>
+      <button
+        style="padding:8px 10px"
+        (click)="reject(w)"
+        [disabled]="actingId === w.id || w.status !== 'PENDING'"
+      >
+        {{ actingId === w.id ? 'Working…' : 'Reject' }}
+      </button>
+
         </td>
       </tr>
 

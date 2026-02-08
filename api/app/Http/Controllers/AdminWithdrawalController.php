@@ -26,8 +26,7 @@ class AdminWithdrawalController extends Controller
             ], 403);
         }
 
-        // 3. Filter by status if provided
-        $status = $request->query('status', 'PENDING');
+        $status = 'PENDING'; // force queue to be truly PENDING-only
 
         $withdrawals = Withdrawal::where('storage_type', 'ALLOCATED')
             ->where('status', $status)
@@ -38,5 +37,5 @@ class AdminWithdrawalController extends Controller
             'success' => true,
             'data' => $withdrawals,
         ]);
-    }
+            }
 }
