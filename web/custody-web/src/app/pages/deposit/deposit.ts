@@ -11,6 +11,7 @@ import { ApiService } from '../../core/api.service';
 export class Deposit {
   metal = 'GOLD';
   quantity = 1;
+
   message: string | null = null;
   loading = false;
 
@@ -34,4 +35,17 @@ export class Deposit {
       },
     });
   }
+
+  refresh() {
+    // Simple, safe reset
+    this.metal = 'GOLD';
+    this.quantity = 1;
+    this.message = null;
+    this.loading = false;
+  }
 }
+
+/* Explanation (end):
+- refresh() only resets local form state
+- no API call, no auth risk
+- keeps demo fast and predictable */

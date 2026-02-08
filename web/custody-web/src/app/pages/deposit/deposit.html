@@ -1,27 +1,55 @@
-<div style="max-width:420px; margin:24px auto;">
-  <h2>Deposit</h2>
+<div style="max-width:420px; margin:32px auto; font-family:system-ui;">
+  <h2 style="margin-bottom:6px;">Deposit</h2>
+  <p style="margin-top:0; margin-bottom:16px; color:#666; font-size:13px;">
+    Submit a deposit request to be processed.
+  </p>
 
-  <label>
-    Metal
-    <select [(ngModel)]="metal">
+  <div style="border:1px solid #e7e7e7; border-radius:14px; padding:16px; background:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+
+    <label style="display:block; font-size:13px; margin-bottom:6px;">
+      Metal
+    </label>
+    <select
+      [(ngModel)]="metal"
+      style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"
+    >
       <option value="GOLD">GOLD</option>
     </select>
-  </label>
 
-  <br /><br />
+    <div style="height:14px;"></div>
 
-  <label>
-    Quantity (kg)
-    <input type="number" [(ngModel)]="quantity" min="0.001" step="0.001" />
-  </label>
+    <label style="display:block; font-size:13px; margin-bottom:6px;">
+      Quantity (kg)
+    </label>
+    <input
+      type="number"
+      min="0.001"
+      step="0.001"
+      [(ngModel)]="quantity"
+      style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"
+    />
 
-  <br /><br />
+    <div style="display:flex; gap:10px; margin-top:18px;">
+      <button
+        (click)="submit()"
+        [disabled]="loading"
+        style="flex:1; padding:10px; border-radius:10px; border:none; background:#2f6fed; color:#fff;"
+      >
+        {{'Submit Deposit' }}
+      </button>
 
-  <button (click)="submit()" [disabled]="loading">
-    {{ loading ? 'Submitting…' : 'Submit Deposit' }}
-  </button>
+      <button
+        type="button"
+        (click)="refresh()"
+        [disabled]="loading"
+        style="padding:10px 14px; border-radius:10px; border:1px solid #ddd; background:#fff;"
+      >
+        Refresh
+      </button>
+    </div>
 
-  <p *ngIf="message" style="margin-top:12px;">
-    {{ message }}
-  </p>
+    <p  style="margin-top:14px; font-size:13px;">
+      {{ message }}
+    </p>
+  </div>
 </div>
