@@ -231,4 +231,28 @@ public function adminReleaseBars(Request $request, \App\Models\Withdrawal $withd
 }
 
 
+public function me(Request $request)
+{
+    $user = $request->user();
+
+    // If user has no account, return empty list
+    if (!$user || !$user->account) {
+        return response()->json([
+            'success' => true,
+            'data' => [],
+        ]);
+    }
+
+    $withdrawals = Withdrawal::where('account_id', $user->account->id)
+        ->orderByDesc('id')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $withdrawals,
+    ]);
+}
+
+
+
 }
