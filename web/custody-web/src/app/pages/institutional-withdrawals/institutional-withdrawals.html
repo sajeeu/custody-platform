@@ -1,4 +1,6 @@
 <div class="institutionalWithdrawalsPage">
+
+  <!-- Header -->
   <div class="pageHeader">
     <h2>Withdrawals</h2>
     <p>Track your withdrawal requests and their status.</p>
@@ -12,49 +14,51 @@
 
   <hr style="margin:16px 0;" />
 
+  <!-- States -->
+  <!-- <p *ngIf="loading" class="muted">Loading…</p> -->
 
 
+  <!-- Table -->
+  <div class="tableCard">
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Storage</th>
+            <th class="num">Amount (kg)</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let w of items">
+            <td class="mono">{{ w.id }}</td>
+            <td>{{ w.storage_type?? '—' }}</td>
+            <td class="num mono">{{ w.quantity_kg }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.pending]="w.status === 'PENDING'"
+                [class.approved]="w.status === 'APPROVED'"
+                [class.rejected]="w.status === 'REJECTED'"
+              >
+                {{ w.status }}
+              </span>
+            </td>
+            <td class="mono">{{ w.created_at | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<div style="max-width:1100px; margin:24px auto; font-family:system-ui;">
-  <h2>Institutional — My Withdrawals</h2>
 
-  <p *ngIf="loading" style="color:#666;">Loading…</p>
-  <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
-
-  <table style="width:100%; border-collapse:collapse; margin-top:12px;">
-    <thead>
-      <tr style="text-align:left; border-bottom:1px solid #eee;">
-        <th>ID</th>
-        <th>Reference</th>
-        <th>Status</th>
-        <th>Type</th>
-        <th>Qty (kg)</th>
-        <th>Bars (IDs)</th>
-        <th>Created</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let w of items" style="border-bottom:1px solid #f2f2f2;">
-        <td>{{ w.id }}</td>
-        <td>{{ w.reference }}</td>
-        <td>{{ w.status }}</td>
-        <td>{{ w.storage_type }}</td>
-        <td>{{ w.quantity_kg }}</td>
-        <td>{{ barIdsLabel(w) }}</td>
-        <td>{{ w.created_at }}</td>
-      </tr>
-
-      <tr *ngIf="!loading && items.length === 0">
-        <td colspan="7" style="padding:12px; color:#666;">
-          No withdrawals found.
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
   <div style="margin-top:14px; display:flex; gap:10px;">
     <button style="padding:10px 14px" (click)="refresh()">Refresh</button>
     <a href="/institutional/bars" style="padding:10px 14px; display:inline-block;">Back to Bars</a>
   </div>
+
+
 </div>
