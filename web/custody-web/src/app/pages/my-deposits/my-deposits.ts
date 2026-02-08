@@ -1,44 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/api.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   standalone: true,
   imports: [CommonModule],
   templateUrl: './my-deposits.html',
+  styleUrls: ['./my-deposits.scss'],
 })
 export class MyDeposits implements OnInit {
   deposits: any[] = [];
-  loading = true;
   error: string | null = null;
 
   constructor(private api: ApiService) {}
 
-ngOnInit() {
-  this.loading = true;
-  this.error = null;
+  ngOnInit() {
+    // First attempt (may race on hard refresh)
+    this.load();
 
-  // Failsafe: never stay stuck on Loading forever
-  const timer = setTimeout(() => {
-    if (this.loading) {
-      this.loading = false;
-      this.error = 'Request did not finish (frontend timeout).';
-    }
-  }, 5000);
+    // Fallback attempt after session is definitely ready
+    setTimeout(() => {
+      if (!this.deposits.length) {
+        this.load();
+      }
+    }, 800);
+  }
 
-  this.api.get<any>('/deposits/me').subscribe({
-    next: (res) => {
-      clearTimeout(timer);
-      this.deposits = res?.data ?? [];
-      this.loading = false;
-    },
-    error: (err) => {
-      clearTimeout(timer);
-      this.error = err?.error?.message ?? 'Failed to load deposits.';
-      this.loading = false;
-    },
-  });
+  load() {
+    this.api.get<any>('/deposits/me').subscribe({
+      next: (res) => {
+        this.deposits = Array.isArray(res?.data) ? res.data : [];
+      },
+      error: (err) => {
+        this.error = err?.error?.message ?? 'Failed to load deposits.';
+      },
+    });
+  }
 }
 
-}

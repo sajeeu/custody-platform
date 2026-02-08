@@ -1,39 +1,49 @@
-<div style="max-width:800px; margin:24px auto;">
-  <h2>My Deposits</h2>
+<div class="page">
+  <div class="header">
+    <div>
+      <h2>My Deposits</h2>
+      <p class="sub">Track your deposit requests and their status.</p>
+    </div>
+  </div>
 
-<!-- <p *ngIf="loading">Loading…</p> -->
-<p *ngIf="!loading && error" style="color:#b00020;">{{ error }}</p>
-<p *ngIf="!loading && !error && !deposits.length">No deposits yet.</p>
+  <div class="card">
 
+    <div *ngIf="error" class="alert">
+      {{ error }}
+    </div>
 
-  <table *ngIf="!loading && !error && deposits.length" border="1" cellpadding="8" cellspacing="0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Metal</th>
-        <th>Quantity (kg)</th>
-        <th>Status</th>
-        <th>Reference</th>
-        <th>Created</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let d of deposits">
-        <td>{{ d.id }}</td>
-        <td>{{ d.metal?.code }}</td>
-        <td>{{ d.quantity_kg }}</td>
-        <td>{{ d.status }}</td>
-        <td>{{ d.reference }}</td>
-        <td>{{ d.created_at | date:'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <!-- <div *ngIf="!error && !deposits.length" class="empty">
+      <div class="emptyIcon">📥</div>
+      <div>
+        <div class="emptyTitle">No deposits yet</div>
+        <div class="emptySub">Create your first deposit to see it listed here.</div>
+      </div>
+    </div> -->
 
-  <p *ngIf="!loading && !error && !deposits.length">
-    No deposits yet.
-  </p>
+    <div *ngIf="deposits.length" class="tableWrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Metal</th>
+            <th class="num">Quantity (kg)</th>
+            <th>Status</th>
+            <th>Reference</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of deposits">
+            <td class="mono">{{ d.id }}</td>
+            <td>{{ d.metal?.code }}</td>
+            <td class="num mono">{{ d.quantity_kg }}</td>
+            <td>{{ d.status }}</td>
+            <td class="mono">{{ d.reference }}</td>
+            <td class="mono">{{ d.created_at | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </div>
-
-<!-- Explanation (end):
-- Shows a real error message if the backend responds with 401/500/etc instead of staying on Loading.
-- Keeps output simple: either Loading, Error, Table, or Empty-state. -->

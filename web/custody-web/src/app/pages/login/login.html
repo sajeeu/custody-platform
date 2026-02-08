@@ -1,36 +1,84 @@
-<div style="max-width:420px; margin:40px auto; font-family:system-ui;">
-  <h2>Login</h2>
+<div
+  style="
+    max-width:420px;
+    margin:80px auto;
+    padding:24px;
+    font-family:system-ui;
+    background:#ffffff;
+    border-radius:8px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.08);
+  "
+>
+  <h2 style="margin:0 0 6px;">Sign in</h2>
+  <p style="margin:0 0 20px; color:#666; font-size:14px;">
+    Access your custody account securely.
+  </p>
 
-  <label>Email</label>
+  <label style="font-size:13px;">Email</label>
   <input
-    style="width:100%; padding:10px; margin:6px 0 12px"
+    type="email"
     [(ngModel)]="email"
+    autocomplete="username"
+    style="
+      width:100%;
+      padding:10px;
+      margin:6px 0 14px;
+      border:1px solid #ccc;
+      border-radius:4px;
+    "
   />
 
-  <label>Password</label>
+  <label style="font-size:13px;">Password</label>
   <input
     type="password"
-    style="width:100%; padding:10px; margin:6px 0 12px"
     [(ngModel)]="password"
+    autocomplete="current-password"
+    style="
+      width:100%;
+      padding:10px;
+      margin:6px 0 16px;
+      border:1px solid #ccc;
+      border-radius:4px;
+    "
   />
 
   <button
-    style="padding:10px 14px"
     (click)="submit()"
     [disabled]="loading"
+    style="
+      width:100%;
+      padding:10px 14px;
+      border:none;
+      border-radius:4px;
+      background:#2f6fed;
+      color:white;
+      font-weight:500;
+      cursor:pointer;
+    "
   >
     {{ loading ? 'Signing in…' : 'Sign in' }}
   </button>
 
-  <p *ngIf="error" style="color:#b00020; margin-top:12px">
+  <p *ngIf="error" style="color:#b00020; margin-top:12px; font-size:13px;">
     {{ error }}
   </p>
+<!-- 
+  <hr style="margin:24px 0" />
 
-  <hr style="margin:20px 0" />
+  <div style="font-size:13px;">
+    <b>Navigation</b>
+    <ul style="margin:8px 0 0; padding-left:18px;">
+      <li><a routerLink="/my-deposits">My Deposits</a></li>
+      <li><a routerLink="/withdrawals">Withdrawals</a></li>
+      <li><a routerLink="/bars">My Bars</a></li>
+      <li><a routerLink="/admin/withdrawals">Admin – Withdrawals</a></li>
+      <li><a routerLink="/admin/deposits">Admin – Deposits</a></li>
+    </ul>
+  </div>
 
-  <small>
-    Admin: <b>admin@example.com</b><br />
-    Institutional: <b>inst@example.com</b><br />
-    Password: <b>Password123!</b>
+  <hr style="margin:20px 0" /> -->
+
+  <small style="color:#666;">
+    Authorized users only
   </small>
 </div>
