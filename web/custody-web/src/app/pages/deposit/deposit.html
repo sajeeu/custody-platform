@@ -1,11 +1,40 @@
 <div style="max-width:420px; margin:32px auto; font-family:system-ui;">
-  <h2 style="margin-bottom:6px;">Deposit</h2>
-  <p style="margin-top:0; margin-bottom:16px; color:#666; font-size:13px;">
-    Submit a deposit request to be processed.
-  </p>
 
-  <div style="border:1px solid #e7e7e7; border-radius:14px; padding:16px; background:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+  <!-- Header + Navigation -->
+  <div style="margin-bottom:16px; text-align:center;">
+    <h2 style="margin-bottom:6px;">Deposit</h2>
+    <p style="margin-top:0; margin-bottom:12px; color:#666; font-size:13px;">
+      Submit a deposit request to be processed.
+    </p>
 
+    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <a
+        href="/my-deposits"
+        style="font-size:13px; padding:6px 12px; border:1px solid #e5e7eb; border-radius:999px; text-decoration:none; color:#2f6fed; background:#fff;"
+      >
+        My Deposits
+      </a>
+
+      <a
+        href="/institutional/bars"
+        style="font-size:13px; padding:6px 12px; border:1px solid #e5e7eb; border-radius:999px; text-decoration:none; color:#2f6fed; background:#fff;"
+      >
+        Allocated Bars
+      </a>
+
+      <a
+        href="/institutional/withdrawals"
+        style="font-size:13px; padding:6px 12px; border:1px solid #e5e7eb; border-radius:999px; text-decoration:none; color:#2f6fed; background:#fff;"
+      >
+        Withdrawals
+      </a>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div
+    style="border:1px solid #e7e7e7; border-radius:14px; padding:16px; background:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.05);"
+  >
     <label style="display:block; font-size:13px; margin-bottom:6px;">
       Metal
     </label>
@@ -35,7 +64,7 @@
         [disabled]="loading"
         style="flex:1; padding:10px; border-radius:10px; border:none; background:#2f6fed; color:#fff;"
       >
-        {{'Submit Deposit' }}
+        {{ loading ? 'Submitting…' : 'Submit Deposit' }}
       </button>
 
       <button
@@ -48,7 +77,7 @@
       </button>
     </div>
 
-    <p  style="margin-top:14px; font-size:13px;">
+    <p *ngIf="message" style="margin-top:14px; font-size:13px;">
       {{ message }}
     </p>
   </div>
