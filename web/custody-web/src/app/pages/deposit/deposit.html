@@ -1,0 +1,27 @@
+<div style="max-width:420px; margin:24px auto;">
+  <h2>Deposit</h2>
+
+  <label>
+    Metal
+    <select [(ngModel)]="metal">
+      <option value="GOLD">GOLD</option>
+    </select>
+  </label>
+
+  <br /><br />
+
+  <label>
+    Quantity (kg)
+    <input type="number" [(ngModel)]="quantity" min="0.001" step="0.001" />
+  </label>
+
+  <br /><br />
+
+  <button (click)="submit()" [disabled]="loading">
+    {{ loading ? 'Submitting…' : 'Submit Deposit' }}
+  </button>
+
+  <p *ngIf="message" style="margin-top:12px;">
+    {{ message }}
+  </p>
+</div>

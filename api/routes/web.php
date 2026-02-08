@@ -19,6 +19,7 @@ Route::prefix('api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth');
     Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth');
     Route::get('/admin/withdrawals/allocated', [AdminWithdrawalController::class, 'allocated']);
+    
 });
 
 
@@ -26,7 +27,9 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('/bars/me', [\App\Http\Controllers\BarController::class, 'myBars']);
     Route::get('/bars/me/available', [\App\Http\Controllers\BarController::class, 'myAvailableBars']);
     Route::get('/admin/bars', [BarController::class, 'adminList'])->middleware('auth');
-    
+    Route::get('/deposits/me', [\App\Http\Controllers\DepositController::class, 'mine']);
+    Route::post('/deposits', [\App\Http\Controllers\DepositController::class, 'store']);
+
 });
 
 
@@ -46,7 +49,6 @@ Route::prefix('api')->middleware('auth')->group(function () {
 Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('/withdrawals/me', [\App\Http\Controllers\WithdrawalController::class, 'me']);
     Route::post('/withdrawals/request-allocated', [\App\Http\Controllers\WithdrawalController::class, 'requestAllocated']);
-
 });
 
 

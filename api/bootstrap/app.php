@@ -34,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'api/admin/allocated-deposits',
         'api/withdrawals/request-allocated',
         'api/admin/withdrawals/*/release-bars',
+        'api/deposits',
     ]);
 
 

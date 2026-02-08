@@ -75,4 +75,62 @@ class DepositController extends Controller
             'data' => $deposits,
         ]);
     }
+
+
+    public function store(Request $request)
+{
+    $user = $request->user();
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated.',
+        ], 401);
+    }
+
+    $request->validate([
+        'metal_code' => 'required|string',
+        'quantity_kg' => 'required|numeric|min:0.001',
+    ]);
+
+    $metal = \App\Models\Metal::where('code', $request->metal_code)->firstOrFail();
+
+    $deposit = \App\Models\Deposit::create([
+        'account_id' => $user->account->id,
+        'metal_id' => $metal->id,
+        'quantity_kg' => $request->quantity_kg,
+        'storage_type' => 'UNALLOCATED',
+        'status' => 'PENDING',
+        'reference' => 'DEP-' . now()->format('YmdHis'),
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'data' => $deposit,
+    ]);
+}
+
+
+public function mine(Request $request)
+{
+    $user = $request->user();
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated.',
+        ], 401);
+    }
+
+    $deposits = \App\Models\Deposit::where('account_id', $user->account->id)
+        ->with('metal')
+        ->orderByDesc('id')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $deposits,
+    ]);
+}
+
 }

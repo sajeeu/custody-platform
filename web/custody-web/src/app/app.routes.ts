@@ -24,4 +24,25 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+
+  {
+  path: 'demo-deposit',
+  loadComponent: () =>
+    import('./pages/demo-deposit/demo-deposit')
+      .then(m => m.DemoDeposit),
+  },
+
+  {
+  path: 'deposit',
+  loadComponent: () =>
+    import('./pages/deposit/deposit').then(m => m.Deposit),
+},
+
+{
+  path: 'my-deposits',
+  loadComponent: () =>
+    import('./pages/my-deposits/my-deposits').then(m => m.MyDeposits),
+},
+
 ];

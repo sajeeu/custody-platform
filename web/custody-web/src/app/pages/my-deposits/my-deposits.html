@@ -1,0 +1,39 @@
+<div style="max-width:800px; margin:24px auto;">
+  <h2>My Deposits</h2>
+
+<!-- <p *ngIf="loading">Loading…</p> -->
+<p *ngIf="!loading && error" style="color:#b00020;">{{ error }}</p>
+<p *ngIf="!loading && !error && !deposits.length">No deposits yet.</p>
+
+
+  <table *ngIf="!loading && !error && deposits.length" border="1" cellpadding="8" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Metal</th>
+        <th>Quantity (kg)</th>
+        <th>Status</th>
+        <th>Reference</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of deposits">
+        <td>{{ d.id }}</td>
+        <td>{{ d.metal?.code }}</td>
+        <td>{{ d.quantity_kg }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.reference }}</td>
+        <td>{{ d.created_at | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && !error && !deposits.length">
+    No deposits yet.
+  </p>
+</div>
+
+<!-- Explanation (end):
+- Shows a real error message if the backend responds with 401/500/etc instead of staying on Loading.
+- Keeps output simple: either Loading, Error, Table, or Empty-state. -->
