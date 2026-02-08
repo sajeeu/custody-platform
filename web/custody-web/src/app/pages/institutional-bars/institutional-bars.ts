@@ -20,12 +20,13 @@ type Bar = {
   styleUrls: ['./institutional-bars.scss'],
 })
 export class InstitutionalBars implements OnInit {
-  available: Bar[] = [];
-  all: Bar[] = [];
-  selected = new Set<number>();
-
   loading = false;
   error: string | null = null;
+
+  available: Bar[] = [];
+  all: Bar[] = [];
+
+  selected = new Set<number>();
 
   submitting = false;
   submitError: string | null = null;
@@ -42,17 +43,17 @@ export class InstitutionalBars implements OnInit {
     this.error = null;
 
     this.api.get<{ success: boolean; data: Bar[] }>('/bars/me/available').subscribe({
-      next: (res) => (this.available = res.data),
-      error: () => (this.error = 'Failed to load available bars'),
+      next: (res) => (this.available = res.data ?? []),
+      error: (err) => (this.error = err?.error?.message ?? 'Failed to load available bars.'),
     });
 
     this.api.get<{ success: boolean; data: Bar[] }>('/bars/me').subscribe({
       next: (res) => {
-        this.all = res.data;
+        this.all = res.data ?? [];
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Failed to load bars';
+      error: (err) => {
+        this.error = err?.error?.message ?? 'Failed to load bars.';
         this.loading = false;
       },
     });
@@ -69,7 +70,7 @@ export class InstitutionalBars implements OnInit {
 
   private selectedBars(): Bar[] {
     const ids = Array.from(this.selected);
-    return this.available.filter(b => ids.includes(b.id));
+    return this.available.filter((b) => ids.includes(b.id));
   }
 
   selectedTotalKg(): string {
@@ -88,7 +89,9 @@ export class InstitutionalBars implements OnInit {
     }
 
     const metalCode = bars[0].metal?.code ?? 'GOLD';
-    if (!bars.every(b => (b.metal?.code ?? metalCode) === metalCode)) {
+
+    // Safety: enforce same metal code for all selected bars
+    if (!bars.every((b) => (b.metal?.code ?? metalCode) === metalCode)) {
       this.submitError = 'Selected bars must be the same metal.';
       return;
     }
@@ -97,7 +100,7 @@ export class InstitutionalBars implements OnInit {
 
     this.api.post<{ success: boolean; data: any }>('/withdrawals/request-allocated', {
       metal_code: metalCode,
-      bar_ids: bars.map(b => b.id),
+      bar_ids: bars.map((b) => b.id),
     }).subscribe({
       next: (res) => {
         this.submitSuccess = `Requested: ${res.data.reference} (status ${res.data.status})`;

@@ -1,9 +1,10 @@
 <div style="max-width:1100px; margin:24px auto; font-family:system-ui;">
   <h2>Institutional — Allocated Bars</h2>
 
+  <p *ngIf="loading" style="color:#666;">Loading…</p>
   <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
 
-  <div style="display:flex; gap:16px; align-items:flex-start;">
+  <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
     <div style="flex:1; border:1px solid #ddd; padding:14px; border-radius:10px;">
       <h3>Available Bars (select for withdrawal)</h3>
 
@@ -19,7 +20,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let b of available" style="border-bottom:1px solid #f2f2f2;">
-            <td><input type="checkbox" [checked]="isSelected(b.id)" (change)="toggle(b.id)" /></td>
+            <td>
+              <input type="checkbox" [checked]="isSelected(b.id)" (change)="toggle(b.id)" />
+            </td>
             <td>{{ b.serial }}</td>
             <td>{{ b.metal?.code ?? '-' }}</td>
             <td>{{ b.weight_kg }}</td>
@@ -36,10 +39,12 @@
         <div><b>Selected:</b> {{ selected.size }}</div>
         <div><b>Total selected (kg):</b> {{ selectedTotalKg() }}</div>
 
-        <button style="margin-top:10px; padding:10px 14px;"
-                (click)="submitAllocatedWithdrawal()"
-                [disabled]="submitting || selected.size === 0">
-          {{ submitting ? 'Submitting...' : 'Request Allocated Withdrawal' }}
+        <button
+          style="margin-top:10px; padding:10px 14px"
+          (click)="submitAllocatedWithdrawal()"
+          [disabled]="submitting || selected.size === 0"
+        >
+          {{ submitting ? 'Submitting…' : 'Request Allocated Withdrawal' }}
         </button>
 
         <p *ngIf="submitError" style="color:#b00020; margin-top:10px;">{{ submitError }}</p>
