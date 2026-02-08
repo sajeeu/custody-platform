@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BarStatus;
+
 use App\Models\Bar;
 use Illuminate\Http\Request;
+use App\Enums\BarStatus;
 
 class BarController extends Controller
 {
     public function myBars(Request $request)
     {
         $account = $request->user()->account;
+
+        if (!$account) {
+        return response()->json(['success' => true, 'data' => []]);
+}
 
         $bars = Bar::where('account_id', $account->id)
             ->with('metal')
@@ -27,6 +32,10 @@ class BarController extends Controller
     public function myAvailableBars(Request $request)
     {
         $account = $request->user()->account;
+
+        if (!$account) {
+        return response()->json(['success' => true, 'data' => []]);
+    }
 
         $bars = Bar::where('account_id', $account->id)
             ->where('status', BarStatus::AVAILABLE)

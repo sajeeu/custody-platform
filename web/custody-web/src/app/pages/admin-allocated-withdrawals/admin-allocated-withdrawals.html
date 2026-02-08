@@ -1,18 +1,19 @@
 <div style="max-width:1100px; margin:24px auto; font-family:system-ui;">
   <h2>Admin — Allocated Withdrawal Queue (PENDING)</h2>
 
+  <p *ngIf="loading" style="color:#666;">Loading…</p>
   <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
-  <p *ngIf="actionMsg" style="color:#0b6b0b;">{{ actionMsg }}</p>
+  <p *ngIf="message" style="color:#0b6b0b;">{{ message }}</p>
 
-  <table style="width:100%; border-collapse:collapse;">
+  <table style="width:100%; border-collapse:collapse; margin-top:12px;">
     <thead>
       <tr style="text-align:left; border-bottom:1px solid #eee;">
         <th>ID</th>
         <th>Reference</th>
         <th>Qty (kg)</th>
-        <th>Bars</th>
+        <th>Bar IDs</th>
         <th>Status</th>
-        <th>Actions</th>
+        <th style="width:240px;">Actions</th>
       </tr>
     </thead>
 
@@ -21,26 +22,32 @@
         <td>{{ w.id }}</td>
         <td>{{ w.reference }}</td>
         <td>{{ w.quantity_kg }}</td>
-
-        <td>
-          <div *ngIf="w.bars?.length; else noBars">
-            <div *ngFor="let b of w.bars">
-              <b>{{ b.serial }}</b> — {{ b.weight_kg }} kg — {{ b.vault ?? '-' }} — {{ b.status }}
-            </div>
-          </div>
-          <ng-template #noBars>-</ng-template>
-        </td>
-
+        <td>{{ barIds(w) }}</td>
         <td>{{ w.status }}</td>
 
         <td>
-          <button style="padding:8px 10px; margin-right:8px" (click)="approve(w.id)">Approve</button>
-          <button style="padding:8px 10px" (click)="reject(w.id)">Reject</button>
+          <button
+            style="padding:8px 10px; margin-right:8px"
+            (click)="approve(w)"
+            [disabled]="actingId === w.id"
+          >
+            {{ actingId === w.id ? 'Working…' : 'Approve' }}
+          </button>
+
+          <button
+            style="padding:8px 10px"
+            (click)="reject(w)"
+            [disabled]="actingId === w.id"
+          >
+            {{ actingId === w.id ? 'Working…' : 'Reject' }}
+          </button>
         </td>
       </tr>
 
-      <tr *ngIf="items.length === 0">
-        <td colspan="6" style="padding:12px; color:#666;">No pending allocated withdrawals.</td>
+      <tr *ngIf="!loading && items.length === 0">
+        <td colspan="6" style="padding:12px; color:#666;">
+          No pending allocated withdrawals.
+        </td>
       </tr>
     </tbody>
   </table>

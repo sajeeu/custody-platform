@@ -21,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
         HandleCors::class,
     ]);
 
+       $middleware->redirectGuestsTo(fn (\Illuminate\Http\Request $request) => null);
+
         $middleware->validateCsrfTokens(except: [
         'api/auth/login',
         'api/auth/logout',
@@ -36,6 +38,19 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })->create();
+->withExceptions(function (\Illuminate\Foundation\Configuration\Exceptions $exceptions): void {
+    $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+        if ($request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        // Non-API requests (if you ever add web pages later)
+        return null;
+    });
+})
+
+    
+    ->create();

@@ -8,47 +8,36 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        if (!Auth::attempt($credentials)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-
-        $request->session()->regenerate();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Logged in',
-        ]);
+    if (!Auth::attempt($credentials)) {
+        return response()->json(['success' => false], 401);
     }
 
-    public function me(Request $request)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'user' => $request->user(),
-            ],
-        ]);
-    }
+    $request->session()->regenerate();
 
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
+    return response()->json(['success' => true]);
+}
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+public function me(Request $request)
+{
+    return response()->json([
+        'success' => true,
+        'data' => ['user' => $request->user()],
+    ]);
+}
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Logged out',
-        ]);
-    }
+public function logout(Request $request)
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return response()->json(['success' => true]);
+}
 }
