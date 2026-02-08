@@ -1,57 +1,111 @@
-<div style="max-width:1100px; margin:24px auto; font-family:system-ui;">
-  <h2>Admin — Allocated Withdrawal Queue (PENDING)</h2>
+<div class="adminAllocatedWithdrawalsPage">
 
-  <p *ngIf="loading" style="color:#666;">Loading…</p>
-  <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
-  <p *ngIf="message" style="color:#0b6b0b;">{{ message }}</p>
+  <!-- Header -->
+  <div class="pageHeader">
+    <h2>Admin — Allocated Withdrawal Queue</h2>
+    <p>Review and process allocated withdrawal requests.</p>
 
-  <table style="width:100%; border-collapse:collapse; margin-top:12px;">
-    <thead>
-      <tr style="text-align:left; border-bottom:1px solid #eee;">
-        <th>ID</th>
-        <th>Reference</th>
-        <th>Qty (kg)</th>
-        <th>Bar IDs</th>
-        <th>Status</th>
-        <th style="width:240px;">Actions</th>
-      </tr>
-    </thead>
+    <div class="pageLinks">
+      <a href="/admin/withdrawals">Refresh</a>
+      <a href="/institutional/bars">Go to Allocated Bars</a>
+      <a href="/institutional/withdrawals">Go to Institutional Withdrawals</a>
+    </div>
+  </div>
 
-    <tbody>
-      <tr *ngFor="let w of items" style="border-bottom:1px solid #f2f2f2;">
-        <td>{{ w.id }}</td>
-        <td>{{ w.reference }}</td>
-        <td>{{ w.quantity_kg }}</td>
-        <td>{{ barIds(w) }}</td>
-        <td>{{ w.status }}</td>
+  <hr />
 
-        <td>
-      <button
-        style="padding:8px 10px; margin-right:8px"
-        (click)="approve(w)"
-        [disabled]="actingId === w.id || w.status !== 'PENDING'"
-      >
-        {{ actingId === w.id ? 'Working…' : 'Approve' }}
-      </button>
+  <!-- States -->
+  <!-- <p *ngIf="loading" class="muted">Loading…</p>
+  <p *ngIf="error" class="errorText">{{ error }}</p>
+  <p *ngIf="message" class="successText">{{ message }}</p> -->
 
-      <button
-        style="padding:8px 10px"
-        (click)="reject(w)"
-        [disabled]="actingId === w.id || w.status !== 'PENDING'"
-      >
-        {{ actingId === w.id ? 'Working…' : 'Reject' }}
-      </button>
+  <!-- Table -->
+  <div class="tableCard">
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Reference</th>
+            <th class="num">Qty (kg)</th>
+            <th>Bar IDs</th>
+            <th>Status</th>
+            <th style="width:320px;">Actions</th>
+          </tr>
+        </thead>
 
-        </td>
-      </tr>
+        <tbody>
+          <tr *ngFor="let w of items">
+            <td class="mono">{{ w.id }}</td>
+            <td class="mono">{{ w.reference }}</td>
+            <td class="num mono">{{ w.quantity_kg }}</td>
+            <td class="mono">{{ barIds(w) }}</td>
+            <td>
+              <span class="badge"
+                    [class.pending]="w.status === 'PENDING'"
+                    [class.approved]="w.status === 'APPROVED'"
+                    [class.rejected]="w.status === 'REJECTED'">
+                {{ w.status }}
+              </span>
+            </td>
 
-      <tr *ngIf="!loading && items.length === 0">
-        <td colspan="6" style="padding:12px; color:#666;">
-          No pending allocated withdrawals.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <td>
+              <!-- Only show action controls when PENDING -->
+              <div *ngIf="w.status === 'PENDING'" class="actions">
 
-  <button style="margin-top:12px; padding:10px 14px" (click)="refresh()">Refresh</button>
+                <button
+                  class="btn primary"
+                  (click)="approve(w)"
+                  [disabled]="actingId === w.id"
+                >
+                  {{ actingId === w.id ? 'Working…' : 'Approve' }}
+                </button>
+
+                <button
+                  class="btn"
+                  (click)="toggleReject(w.id)"
+                  [disabled]="actingId === w.id"
+                >
+                  Reject
+                </button>
+
+                <!-- Inline reject reason (no prompt) -->
+                <div *ngIf="rejectOpenId === w.id" class="rejectBox">
+                  <input
+                    class="rejectInput"
+                    placeholder="Reason (min 5 chars)"
+                    [(ngModel)]="rejectReason"
+                  />
+                  <button
+                    class="btn danger"
+                    (click)="reject(w, rejectReason)"
+                    [disabled]="actingId === w.id"
+                  >
+                    {{ actingId === w.id ? 'Working…' : 'Confirm Reject' }}
+                  </button>
+                  <button class="btn ghost" (click)="cancelReject()">Cancel</button>
+                </div>
+
+              </div>
+
+              <!-- If not pending, show a muted label instead of buttons -->
+              <div *ngIf="w.status !== 'PENDING'" class="mutedSmall">
+                No actions available
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- <div *ngIf="!loading && items.length === 0" class="emptyRow">
+    No pending allocated withdrawals.
+  </div> -->
+
+  <button class="btn" style="margin-top:12px;" (click)="refresh()">
+    Refresh
+  </button>
+
 </div>
+

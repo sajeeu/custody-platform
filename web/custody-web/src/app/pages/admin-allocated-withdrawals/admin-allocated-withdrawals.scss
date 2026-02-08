@@ -1,0 +1,172 @@
+.adminAllocatedWithdrawalsPage {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
+  font-family: system-ui;
+}
+
+/* Header */
+.pageHeader {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.pageHeader h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.pageHeader p {
+  margin: 0 0 12px;
+  color: #666;
+  font-size: 13px;
+}
+
+.pageLinks {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pageLinks a {
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #2f6fed;
+  background: #fff;
+}
+
+.pageLinks a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+/* States */
+.muted { color: #666; font-size: 13px; }
+.mutedSmall { color: #777; font-size: 12px; }
+
+.errorText { color: #b00020; font-size: 13px; }
+.successText { color: #0b6b0b; font-size: 13px; }
+
+/* Table */
+.tableCard {
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.tableWrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+}
+
+thead th {
+  text-align: left;
+  font-size: 12px;
+  color: #555;
+  padding: 12px;
+  background: #fafafa;
+  border-bottom: 1px solid #ececec;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+
+tbody tr:hover td { background: #fcfcfc; }
+
+.emptyRow {
+  padding: 12px;
+  color: #666;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pending { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+.approved { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.rejected { background: #fef2f2; color: #7f1d1d; border: 1px solid #fecaca; }
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rejectBox {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.rejectInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn:hover { background: #f7f7f7; }
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary {
+  border: none;
+  background: #2f6fed;
+  color: #fff;
+}
+
+.primary:hover { background: #245ed0; }
+
+.danger {
+  border: none;
+  background: #b00020;
+  color: #fff;
+}
+
+.danger:hover { background: #8f001a; }
+
+.ghost {
+  background: transparent;
+}
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12.5px;
+}
+.num { text-align: right; }
