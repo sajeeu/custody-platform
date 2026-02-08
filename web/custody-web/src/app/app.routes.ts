@@ -1,8 +1,27 @@
 import { Routes } from '@angular/router';
-import { HealthComponent } from './pages/health/health.component';
+import { Login } from './pages/login/login';
 
 export const routes: Routes = [
-  { path: 'health', component: HealthComponent },
-  { path: '', redirectTo: 'health', pathMatch: 'full' },
-  { path: '**', redirectTo: 'health' },
+  { path: 'login', component: Login },
+
+  {
+    path: 'institutional/bars',
+    loadComponent: () =>
+      import('./pages/institutional-bars/institutional-bars')
+        .then(m => m.InstitutionalBars),
+  },
+  {
+    path: 'institutional/withdrawals',
+    loadComponent: () =>
+      import('./pages/institutional-withdrawals/institutional-withdrawals')
+        .then(m => m.InstitutionalWithdrawals),
+  },
+  {
+    path: 'admin/allocated-withdrawals',
+    loadComponent: () =>
+      import('./pages/admin-allocated-withdrawals/admin-allocated-withdrawals')
+        .then(m => m.AdminAllocatedWithdrawals),
+  },
+
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

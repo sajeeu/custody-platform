@@ -1,0 +1,37 @@
+<div style="max-width:1000px; margin:24px auto; font-family:system-ui;">
+  <h2>Institutional — Allocated Withdrawals</h2>
+
+  <p *ngIf="error" style="color:#b00020;">{{ error }}</p>
+
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="text-align:left; border-bottom:1px solid #eee;">
+        <th>ID</th>
+        <th>Reference</th>
+        <th>Status</th>
+        <th>Qty (kg)</th>
+        <th>Bars</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let w of withdrawals" style="border-bottom:1px solid #f2f2f2;">
+        <td>{{ w.id }}</td>
+        <td>{{ w.reference }}</td>
+        <td>{{ w.status }}</td>
+        <td>{{ w.quantity_kg }}</td>
+        <td>{{ w.meta?.bar_ids?.join(', ') ?? '-' }}</td>
+        <td>{{ w.created_at }}</td>
+      </tr>
+
+      <tr *ngIf="withdrawals.length === 0">
+        <td colspan="6" style="padding:12px; color:#666;">No allocated withdrawals yet.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button style="margin-top:12px; padding:10px 14px" (click)="refresh()">Refresh</button>
+  <div style="margin-top:16px;">
+    <a href="/institutional/bars">Back to Bars</a>
+  </div>
+</div>

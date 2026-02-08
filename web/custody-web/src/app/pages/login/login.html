@@ -1,0 +1,36 @@
+<div style="max-width:420px; margin:40px auto; font-family:system-ui;">
+  <h2>Login</h2>
+
+  <label>Email</label>
+  <input
+    style="width:100%; padding:10px; margin:6px 0 12px"
+    [(ngModel)]="email"
+  />
+
+  <label>Password</label>
+  <input
+    type="password"
+    style="width:100%; padding:10px; margin:6px 0 12px"
+    [(ngModel)]="password"
+  />
+
+  <button
+    style="padding:10px 14px"
+    (click)="submit()"
+    [disabled]="loading"
+  >
+    {{ loading ? 'Signing in…' : 'Sign in' }}
+  </button>
+
+  <p *ngIf="error" style="color:#b00020; margin-top:12px">
+    {{ error }}
+  </p>
+
+  <hr style="margin:20px 0" />
+
+  <small>
+    Admin: <b>admin@example.com</b><br />
+    Institutional: <b>inst@example.com</b><br />
+    Password: <b>Password123!</b>
+  </small>
+</div>
