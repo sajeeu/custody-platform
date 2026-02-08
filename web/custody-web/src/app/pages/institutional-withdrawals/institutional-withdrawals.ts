@@ -5,11 +5,11 @@ import { ApiService } from '../../core/api.service';
 type Withdrawal = {
   id: number;
   reference: string;
-  storage_type: string;
   status: string;
+  storage_type: string;
   quantity_kg: string;
   created_at: string;
-  meta: any;
+  meta?: any;
 };
 
 @Component({
@@ -22,7 +22,8 @@ type Withdrawal = {
 export class InstitutionalWithdrawals implements OnInit {
   loading = false;
   error: string | null = null;
-  withdrawals: Withdrawal[] = [];
+
+  items: Withdrawal[] = [];
 
   constructor(private api: ApiService) {}
 
@@ -36,15 +37,19 @@ export class InstitutionalWithdrawals implements OnInit {
 
     this.api.get<{ success: boolean; data: Withdrawal[] }>('/withdrawals/me').subscribe({
       next: (res) => {
-        this.withdrawals = res.data
-          .filter(w => w.storage_type === 'ALLOCATED')
-          .sort((a, b) => b.id - a.id);
+        this.items = res.data ?? [];
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Failed to load withdrawals.';
+      error: (err) => {
+        this.error = err?.error?.message ?? 'Failed to load your withdrawals.';
         this.loading = false;
       },
     });
+  }
+
+  barIdsLabel(w: Withdrawal): string {
+    const ids = w?.meta?.bar_ids;
+    if (!Array.isArray(ids) || ids.length === 0) return '-';
+    return ids.join(', ');
   }
 }
