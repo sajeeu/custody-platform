@@ -122,3 +122,37 @@ Ensures API responds with a controlled validation message.
 
 Frontend refresh race after login
 Handling: frontend uses a safe re-fetch pattern after initial load; backend returns consistent session-based auth.
+
+Architecture sketch
+┌─────────────────────────────────────────────┐
+│ Browser (Angular SPA)                        │
+│  - Login (cookie/session auth)               │
+│  - Deposit (create) + My Deposits (list)     │
+│  - Allocated Bars (list/select)              │
+│  - Withdrawals (create/list)                 │
+│  - Admin: Allocated Withdrawal Queue         │
+└─────────────────────────────────────────────┘
+                    │
+                    │ HTTPS (JSON) + credentials (cookies)
+                    ▼
+┌─────────────────────────────────────────────┐
+│ Laravel API                                  │
+│  - Auth (Sanctum/session) + Role checks      │
+│    • ADMIN / INSTITUTIONAL                   │
+│  - Controllers → Services → DB transactions  │
+│  - Core flows:                               │
+│    • Deposits: create + list (me)            │
+│    • Bars: list (me/available)               │
+│    • Withdrawals: create/list + approve/reject│
+│    • Reserve bars on PENDING allocated w/d   │
+└─────────────────────────────────────────────┘
+                    │
+                    │ SQL
+                    ▼
+┌─────────────────────────────────────────────┐
+│ MySQL (XAMPP)                                │
+│  - users, accounts, metals                   │
+│  - deposits, withdrawals                     │
+│  - bars (AVAILABLE/RESERVED/WITHDRAWN)       │
+│  - ledger_entries (audit trail)              │
+└─────────────────────────────────────────────┘
