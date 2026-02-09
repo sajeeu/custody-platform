@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
     $this->call([
         MetalSeeder::class,
         AdminUserSeeder::class,
+        InstitutionalUserSeeder::class,
     ]);
+
 
     }
 }

@@ -42,6 +42,8 @@ DB_PASSWORD= (blank, unless you set one)
 
 Run migrations:
 php artisan migrate
+php artisan migrate --seed
+
 
 Start API:
 php artisan serve
